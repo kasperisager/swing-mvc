@@ -20,6 +20,19 @@ import java.util.EventListener;
  * document).
  * </blockquote>
  *
+ * <p>
+ * All {@link Controller Controllers} implement the {@link EventListener}
+ * interface by default and thus aren't really useful out of the box. It is
+ * therefore needed to further extend other {@link EventListener} interfaces
+ * from the Java, AWT, and Swing packages in order to utilize controllers:
+ *
+ * <pre>
+ * public final class MyController extends Controller&lt;MyModel, MyView&gt;
+ *   implements KeyListener, MouseListener, ActionListener {
+ *   // ...
+ * }
+ * </pre>
+ *
  * @see <a href="http://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller">
  *      http://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller</a>
  *
@@ -41,9 +54,13 @@ public abstract class Controller<M extends Model, V extends View>
   /**
    * Set the model that the view of the controller operates on.
    *
+   * <p>
+   * This method is used by the {@link View} class when initializing its
+   * controller and should never be used directly.
+   *
    * @param model The model that the view of the controller operates on.
    */
-  public final void model(final M model) {
+  protected final void model(final M model) {
     if (model == null) {
       return;
     }
@@ -56,16 +73,20 @@ public abstract class Controller<M extends Model, V extends View>
    *
    * @return The model that the view of the controller operates on.
    */
-  public final M model() {
+  protected final M model() {
     return this.model;
   }
 
   /**
    * Set the view that the controller operates on.
    *
+   * <p>
+   * This method is used by the {@link View} class when initializing its
+   * controller and should never be used directly.
+   *
    * @param view  The view that the controller operates on.
    */
-  public final void view(final V view) {
+  protected final void view(final V view) {
     if (view == null) {
       return;
     }
@@ -78,7 +99,7 @@ public abstract class Controller<M extends Model, V extends View>
    *
    * @return The view that the controller operates on.
    */
-  public final V view() {
+  protected final V view() {
     return this.view;
   }
 }

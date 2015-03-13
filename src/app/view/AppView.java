@@ -3,12 +3,6 @@
  */
 package app.view;
 
-// AWT utilities
-import java.awt.Component;
-
-// Swing utilities
-import javax.swing.JFrame;
-
 // Framework
 import app.framework.View;
 
@@ -18,8 +12,8 @@ import app.framework.View;
  *
  * <p>
  * This view is sorta special in the sense that it's the main entry point to
- * the rest of the application. It renders as a JFrame that contains the other
- * views of the application.
+ * the rest of the application. All it does is render the other views of the
+ * application.
  *
  * <p>
  * This view is also an example of a view associated with neither a model nor a
@@ -27,20 +21,9 @@ import app.framework.View;
  */
 public final class AppView extends View {
   /**
-   * Render the application view.
-   *
-   * @return The rendered application view.
+   * Render the view.
    */
-  public Component render() {
-    JFrame frame = new JFrame();
-
-    FooView fooView = new FooView();
-
-    frame.getContentPane().add(fooView.render());
-
-    frame.pack();
-    frame.setVisible(true);
-
-    return frame;
+  protected void render() {
+    this.add(new FooView());
   }
 }

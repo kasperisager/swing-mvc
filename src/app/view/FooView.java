@@ -6,16 +6,12 @@ package app.view;
 // Utilities
 import java.util.Observable;
 
-// AWT utilities
-import java.awt.Component;
-
-// AWT eventt
+// AWT events
 import java.awt.event.ActionListener;
 
 // Swing utilities
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 
 // Framework
 import app.framework.View;
@@ -39,28 +35,23 @@ public final class FooView extends View<Foo, FooController> {
   /**
    * Initialize the view.
    */
-  public FooView() {
+  protected void initialize() {
     this.model(new Foo());
     this.controller(new FooController());
   }
 
   /**
-   * Render the view as an AWT component.
-   *
-   * @return The rendered AWT component.
+   * Render the view.
    */
-  public Component render() {
-    JPanel panel = new JPanel();
+  protected void render() {
     JButton button = new JButton("Plus One");
-    panel.add(button);
+    this.add(button);
 
     this.label = new JLabel("Count: " + this.model().bar());
-    panel.add(this.label);
+    this.add(this.label);
 
     // Add the controller of the view as an action listener on the button.
     button.addActionListener(this.controller());
-
-    return panel;
   }
 
   /**

@@ -7,8 +7,8 @@ package app.framework;
 import java.util.Observable;
 import java.util.Observer;
 
-// AWT utilities
-import java.awt.Component;
+// Swing utilities
+import javax.swing.JPanel;
 
 /**
  * The {@link View} class describes all the basic functionality of a view
@@ -30,7 +30,7 @@ import java.awt.Component;
  * @param <C> The type of controller that will operate on the view. This can be
  *            omitted if no controller will ever operate on the view.
  */
-public abstract class View<M extends Model, C extends Controller>
+public abstract class View<M extends Model, C extends Controller> extends JPanel
   implements Observer {
   /**
    * The model that the view operates on.
@@ -43,12 +43,23 @@ public abstract class View<M extends Model, C extends Controller>
   private C controller;
 
   /**
+   * Initialize the view.
+   */
+  public View() {
+    // Run view initialization such as loading controllers and models.
+    this.initialize();
+
+    // Render the view now that the controllers and models are available.
+    this.render();
+  }
+
+  /**
    * Set the model that the view operates on.
    *
    * @param model The model that the view operates on.
    */
   @SuppressWarnings("unchecked")
-  public final void model(final M model) {
+  protected final void model(final M model) {
     if (model == null) {
       return;
     }
@@ -75,7 +86,7 @@ public abstract class View<M extends Model, C extends Controller>
    *
    * @return The model that the view displays.
    */
-  public final M model() {
+  protected final M model() {
     return this.model;
   }
 
@@ -85,7 +96,7 @@ public abstract class View<M extends Model, C extends Controller>
    * @param controller The controller operating on the view.
    */
   @SuppressWarnings("unchecked")
-  public final void controller(final C controller) {
+  protected final void controller(final C controller) {
     if (controller == null) {
       return;
     }
@@ -104,24 +115,45 @@ public abstract class View<M extends Model, C extends Controller>
    *
    * @return The controller operating on the view.
    */
-  public final C controller() {
+  protected final C controller() {
     return this.controller;
   }
 
   /**
-   * Render the view as an AWT component.
+   * Initialize the view.
    *
-   * @return The rendered AWT component.
+   * <p>
+   * This method must be overriden if a controller and model is set on the view.
+   * This ensures that initialization of controllers/models and rendering the
+   * view happens in the correct order.
+   *
+   * <p>
+   * The order in which the controller and model are initialized does not make a
+   * difference.
    */
-  public abstract Component render();
+  protected void initialize() {
+    ; // Do nothing by default.
+  }
+
+  /**
+   * Render the view.
+   *
+   * <p>
+   * This method must be implemented by subclasses and is where the view is
+   * actually rendered. Subclasses have access to both the controller and model
+   * of the view when this step is reached.
+   */
+  protected abstract void render();
 
   /**
    * React to changes in the observed models of the view.
    *
+   * <p>
    * This method simply casts the observable to a {@link Model }of the generic
    * type as specified by the {@link View} after which the call is proxied to
    * {@link #update(Model, Object)}.
    *
+   * <p>
    * This method should never be called directly and is only used by observable
    * {@link Model Models}. Use {@link #update(Model, Object)} instead.
    *
@@ -136,6 +168,7 @@ public abstract class View<M extends Model, C extends Controller>
   /**
    * React to changes in the observed models of the view.
    *
+   * <p>
    * This method must be overriden by subclasses if they wish to be observers.
    * Views that do not observe models do not have to override the method.
    *
