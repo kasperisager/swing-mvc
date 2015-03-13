@@ -175,7 +175,7 @@ public abstract class View<M extends Model, C extends Controller> extends JPanel
    * @param model The model that changed.
    * @param value The value that changed.
    */
-  public void update(final M model, final Object value) {
+  protected void update(final M model, final Object value) {
     throw new UnsupportedOperationException();
   }
 }

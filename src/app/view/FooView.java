@@ -59,7 +59,7 @@ public final class FooView extends View<Foo, FooController> {
    *
    * @param model The model that changed.
    */
-  public void update(final Foo model, final Object value) {
+  protected void update(final Foo model, final Object value) {
     this.label.setText("Count: " + value);
   }
 }
