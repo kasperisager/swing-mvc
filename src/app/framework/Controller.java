@@ -43,7 +43,7 @@ public abstract class Controller<M extends Model, V extends View>
    *
    * @param model The model that the view of the controller operates on.
    */
-  public void model(final M model) {
+  public final void model(final M model) {
     if (model == null) {
       return;
     }
@@ -56,7 +56,7 @@ public abstract class Controller<M extends Model, V extends View>
    *
    * @return The model that the view of the controller operates on.
    */
-  public M model() {
+  public final M model() {
     return this.model;
   }
 
@@ -65,7 +65,7 @@ public abstract class Controller<M extends Model, V extends View>
    *
    * @param view  The view that the controller operates on.
    */
-  public void view(final V view) {
+  public final void view(final V view) {
     if (view == null) {
       return;
     }
@@ -78,7 +78,7 @@ public abstract class Controller<M extends Model, V extends View>
    *
    * @return The view that the controller operates on.
    */
-  public V view() {
+  public final V view() {
     return this.view;
   }
 }

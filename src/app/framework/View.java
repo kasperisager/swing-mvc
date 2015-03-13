@@ -48,7 +48,7 @@ public abstract class View<M extends Model, C extends Controller>
    * @param model The model that the view operates on.
    */
   @SuppressWarnings("unchecked")
-  public void model(final M model) {
+  public final void model(final M model) {
     if (model == null) {
       return;
     }
@@ -75,7 +75,7 @@ public abstract class View<M extends Model, C extends Controller>
    *
    * @return The model that the view displays.
    */
-  public M model() {
+  public final M model() {
     return this.model;
   }
 
@@ -85,7 +85,7 @@ public abstract class View<M extends Model, C extends Controller>
    * @param controller The controller operating on the view.
    */
   @SuppressWarnings("unchecked")
-  public void controller(final C controller) {
+  public final void controller(final C controller) {
     if (controller == null) {
       return;
     }
@@ -104,7 +104,7 @@ public abstract class View<M extends Model, C extends Controller>
    *
    * @return The controller operating on the view.
    */
-  public C controller() {
+  public final C controller() {
     return this.controller;
   }
 
