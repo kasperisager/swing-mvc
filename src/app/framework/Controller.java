@@ -23,7 +23,7 @@ import java.util.EventListener;
  * <p>
  * All {@link Controller Controllers} implement the {@link EventListener}
  * interface by default and thus aren't really useful out of the box. It is
- * therefore needed to further extend other {@link EventListener} interfaces
+ * therefore needed to further implement other {@link EventListener} interfaces
  * from the Java, AWT, and Swing packages in order to utilize controllers:
  *
  * <pre>
