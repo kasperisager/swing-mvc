@@ -19,6 +19,69 @@ For the uninitiated, simply run the following from a terminal to execute any giv
 make [task]
 ```
 
+## Getting started
+
+### Application
+
+```java
+public final class MyApp extends Application {
+  protected void start(final JFrame frame) {
+    frame.getContentPane().add(new MyView());
+    frame.pack();
+    frame.setVisible(true);
+  }
+}
+```
+
+### Model
+
+```java
+public final class MyModel extends Model {
+  private String field;
+  
+  public void getField() {
+    return this.field;
+  }
+  
+  public void setField(final String value) {
+    this.field = value;
+    this.changed(this.field);
+  }
+}
+```
+
+### View
+
+```java
+public final class MyView extends View<MyModel, MyController> {
+  protected void initialize() {
+    this.model(new MyModel());
+    this.controller(new MyController());
+  }
+  
+  protected void render() {
+    someComponent.addActionListener(this.controller());
+  }
+  
+  protected void update(final MyModel model, final Object value) {
+    System.out.println(
+      model + " changed a field value to " + value
+    );
+  }
+}
+```
+
+### Controller
+
+```java
+public final class MyController extends Controller<MyModel, MyView>
+  implements ActionListener {
+  public void actionPerformed(final ActionEvent e) {
+    this.model().setField(...);
+  }
+}
+```
+
 ---
 
 Copyright &copy; 2015 [Kasper Kronborg Isager](https://github.com/kasperisager). Licensed under the terms of the [MIT license](LICENSE.md).
