@@ -1,5 +1,7 @@
 # Swing MVC
 
+[![Build Status](https://travis-ci.org/kasperisager/swing-mvc.svg?branch=master)](https://travis-ci.org/kasperisager/swing-mvc)
+
 A simple example of a JavaFX-esque MVC micro-framework for Swing applications. This was built as a demonstration of how to force some structure unto applications written using Swing. Many of the ideas presented in this micro-framework are based on the JavaFX way of doing MVC.
 
 The framework takes a View-first approach where it becomes the responsibility of a View to initialize its associated Controller and Model. This works well with the window-based structure of Swing applications as Views can then easily be embedded within other Views without having to worry about injecting Controller and Model instances.
