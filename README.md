@@ -23,7 +23,13 @@ make [task]
 
 ## Getting started
 
+> Generated Javadoc documentation can be found at https://kasperisager.github.io/swing-mvc.
+
+Below are some examples of the different aspects of the framework in use.
+
 ### Application
+
+The `Application` class takes care of constructing the main application frame and passing it on to subclasses. To create a new MVC application one must therefore extend the `Application` class and implement the `start(JFrame)` method:
 
 ```java
 public final class MyApp extends Application {
@@ -32,6 +38,14 @@ public final class MyApp extends Application {
     frame.pack();
     frame.setVisible(true);
   }
+}
+```
+
+To get `MyApp` up and running, simply initialize it in, say, `main(String[])`:
+
+```java
+public static void main(final String[] args) {
+  new MyApp();
 }
 ```
 
