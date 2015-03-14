@@ -58,6 +58,7 @@ public final class FooView extends View<Foo, FooController> {
    * React to changes in the observed models of the view.
    *
    * @param model The model that changed.
+   * @param value The value that changed.
    */
   protected void update(final Foo model, final Object value) {
     this.label.setText("Count: " + value);
