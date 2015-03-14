@@ -8,7 +8,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 // Framework
-import app.framework.View;
 import app.framework.Controller;
 
 // Models
