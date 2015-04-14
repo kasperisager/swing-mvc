@@ -8,7 +8,7 @@ SRC="src"
 OUT="out"
 DOC="doc"
 
-compile:
+compile: clean
 	@mkdir -p ${OUT}/
 	@javac \
 		-Xlint:unchecked \
