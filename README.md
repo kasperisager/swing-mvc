@@ -76,7 +76,7 @@ public final class MyView extends View<MyModel, MyController> {
   public MyView(final Application application) {
     super(application);
     this.model(new MyModel(application));
-    this.controller(new MyController());
+    this.controller(new MyController(application));
   }
 
   public JButton render() {
