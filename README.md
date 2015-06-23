@@ -101,7 +101,7 @@ public final class MyController extends Controller<MyModel, MyView> {
   }
 
   public void myAction() {
-    this.model().setField(101);
+    this.model().setField("Something");
   }
 }
 ```
