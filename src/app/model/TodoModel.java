@@ -3,8 +3,8 @@
  */
 package app.model;
 
+import java.util.Collection;
 import java.util.LinkedHashSet;
-import java.util.Set;
 
 // Framework
 import app.framework.Application;
@@ -15,7 +15,7 @@ import app.framework.Model;
  * {@link app.framework}.
  */
 public final class TodoModel extends Model {
-  private Set<TodoItem> todos = new LinkedHashSet<>();
+  private Collection<TodoItem> todos = new LinkedHashSet<>();
 
   public TodoModel(final Application application) {
     super(application);

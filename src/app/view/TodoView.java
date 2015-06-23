@@ -3,6 +3,9 @@
  */
 package app.view;
 
+// General utilities
+import java.util.List;
+
 // AWT utilities
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -109,11 +112,11 @@ public final class TodoView extends View<TodoModel, TodoController> {
     actionsPanel.add(todoComplete);
 
     todoComplete.addActionListener(e -> {
-      // Get the currently selected Todo item.
-      TodoItem selectedTodo = todosList.getSelectedValue();
+      // Get the currently selected Todo items.
+      List<TodoItem> selectedTodos = todosList.getSelectedValuesList();
 
       // Delegate deletion of the Todo item to the controller.
-      this.controller().complete(selectedTodo);
+      this.controller().complete(selectedTodos);
     });
 
     todosList.addListSelectionListener(e -> {

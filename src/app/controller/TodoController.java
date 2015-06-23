@@ -3,6 +3,9 @@
  */
 package app.controller;
 
+// General utilities
+import java.util.List;
+
 // Framework
 import app.framework.Application;
 import app.framework.Controller;
@@ -64,6 +67,16 @@ public final class TodoController extends Controller<TodoModel, TodoView> {
 
     // Remove the todo item from the model.
     this.model().remove(todo);
+  }
+
+  public void complete(final List<TodoItem> todos) {
+    if (todos == null) {
+      throw new NullPointerException();
+    }
+
+    for (TodoItem todo: todos) {
+      this.complete(todo);
+    }
   }
 
   public void clear() {
