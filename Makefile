@@ -1,14 +1,14 @@
 GITHUB_REPO="kasperisager/swing-mvc"
 
 MAIN_PKG="app"
-MAIN_JAVA="app/App.java"
-MAIN_CLASS="${MAIN_PKG}.App"
+MAIN_JAVA="app/TodoApp.java"
+MAIN_CLASS="${MAIN_PKG}.TodoApp"
 
 SRC="src"
 OUT="out"
 DOC="doc"
 
-compile:
+compile: clean
 	@mkdir -p ${OUT}/
 	@javac \
 		-Xlint:unchecked \

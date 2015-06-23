@@ -29,14 +29,13 @@ Below are some examples of the different aspects of the framework in use.
 
 ### Application
 
-The `Application` class takes care of constructing the main application frame and passing it on to subclasses. To create a new MVC application one must therefore extend the `Application` class and implement the `start(JFrame)` method:
+The `Application` class takes care of constructing the main application frame. To create a new MVC application one must therefore extend the `Application` class and implement the `start(JFrame)` method:
 
 ```java
 public final class MyApp extends Application {
   protected void start(final JFrame frame) {
-    frame.getContentPane().add(new MyView());
-    frame.pack();
-    frame.setVisible(true);
+    frame.setTitle("My App");
+    frame.getContentPane().add(new MyView(this).render());
   }
 }
 ```
@@ -54,14 +53,18 @@ public static void main(final String[] args) {
 ```java
 public final class MyModel extends Model {
   private String field;
-  
+
+  public MyModel(final Application application) {
+    super(application);
+  }
+
   public void getField() {
     return this.field;
   }
-  
+
   public void setField(final String value) {
     this.field = value;
-    this.changed(this.field);
+    this.emit("changed:field", this.field);
   }
 }
 ```
@@ -70,19 +73,21 @@ public final class MyModel extends Model {
 
 ```java
 public final class MyView extends View<MyModel, MyController> {
-  protected void initialize() {
-    this.model(new MyModel());
+  public MyView(final Application application) {
+    super(application);
+    this.model(new MyModel(application));
     this.controller(new MyController());
   }
-  
-  protected void render() {
-    someComponent.addActionListener(this.controller());
-  }
-  
-  protected void update(final MyModel model, final Object value) {
-    System.out.println(
-      model + " changed a field value to " + value
-    );
+
+  public JButton render() {
+    JButton button = new JButton("This view is a button!");
+    button.addActionListener(e -> this.controller().myAction());
+
+    this.model().on("changed:field", (String field) -> {
+      System.out.println("Field was changed to " + field);
+    });
+
+    return button;
   }
 }
 ```
@@ -90,10 +95,13 @@ public final class MyView extends View<MyModel, MyController> {
 ### Controller
 
 ```java
-public final class MyController extends Controller<MyModel, MyView>
-  implements ActionListener {
-  public void actionPerformed(final ActionEvent e) {
-    this.model().setField(...);
+public final class MyController extends Controller<MyModel, MyView> {
+  public MyController(final Application application) {
+    super(application);
+  }
+
+  public void myAction() {
+    this.model().setField(101);
   }
 }
 ```

@@ -3,12 +3,11 @@
  */
 package app.framework;
 
-// Utilities
-import java.util.Observable;
-import java.util.Observer;
+// Functional utilities
+import java.util.function.Consumer;
 
 // Swing utilities
-import javax.swing.JPanel;
+import javax.swing.JComponent;
 
 /**
  * The {@link View} class describes all the basic functionality of a view
@@ -30,152 +29,201 @@ import javax.swing.JPanel;
  * @param <C> The type of controller that will operate on the view. This can be
  *            omitted if no controller will ever operate on the view.
  */
-public abstract class View<M extends Model, C extends Controller> extends JPanel
-  implements Observer {
+public abstract class View<M extends Model, C extends Controller> {
   /**
-   * The model that the view operates on.
+   * The {@link Application} that the {@link View} is part of.
+   */
+  private Application application;
+
+  /**
+   * The {@link Model} that the {@link View} operates on.
    */
   private M model;
 
   /**
-   * The controller operating on the view.
+   * The {@link Controller} operating on the {@link View}.
    */
   private C controller;
 
   /**
-   * Initialize the view.
+   * Initialize a new {@link View} instance for the specified
+   * {@link Application}.
+   *
+   * @param application The {@link Application} that the {@link View} is
+   *                    associated with.
    */
-  public View() {
-    // Run view initialization such as loading controllers and models.
-    this.initialize();
+  public View(final Application application) {
+    if (application == null) {
+      throw new IllegalArgumentException(
+        "An Application must be specified when initialising a View."
+      );
+    }
 
-    // Render the view now that the controllers and models are available.
-    this.render();
+    this.application = application;
   }
 
   /**
-   * Set the model that the view operates on.
+   * Access the {@link Application} that the {@link View} is associated with.
    *
-   * @param model The model that the view operates on.
+   * @return The {@link Application} that the {@link View} is associated with.
    */
-  @SuppressWarnings("unchecked")
-  protected final void model(final M model) {
-    if (model == null) {
-      return;
-    }
-
-    // If a model has already been associated with the view, remove the view
-    // as an observer from the old model.
-    if (this.model != null) {
-      this.model.deleteObserver(this);
-    }
-
-    this.model = model;
-
-    // Add the view as an observer of the model.
-    this.model.addObserver(this);
-
-    // Set the model on the controller if the controller exists.
-    if (this.controller != null) {
-      this.controller.model(this.model);
-    }
+  protected final Application application() {
+    return this.application;
   }
 
   /**
-   * Access the model that the view displays.
+   * Access the {@link Model} that the {@link View} renders.
    *
-   * @return The model that the view displays.
+   * @return The {@link Model} that the {@link View} renders.
    */
   protected final M model() {
     return this.model;
   }
+  /**
+   * Set the {@link Model} that the {@link View} operates on.
+   *
+   * @param model The {@link Model} that the {@link View} operates on.
+   */
+  @SuppressWarnings("unchecked")
+  protected final void model(final M model) {
+    if (model == null) {
+      throw new NullPointerException();
+    }
+
+    if (this.model != null) {
+      throw new IllegalStateException(
+        "A Model has already been set on the View."
+      );
+    }
+
+    this.model = model;
+
+    if (this.controller != null) {
+      try {
+        this.controller.model(model);
+      }
+      catch (IllegalStateException ex) {
+        ;
+      }
+    }
+  }
 
   /**
-   * Set the controller operating on the view.
+   * Access the {@link Controller} operating on the {@link View}.
+   *
+   * @return The {@link Controller} operating on the {@link View}.
+   */
+  protected final C controller() {
+    return this.controller;
+  }
+  /**
+   * Set the {@link Controller} operating on the {@link View}.
    *
    * @param controller The controller operating on the view.
    */
   @SuppressWarnings("unchecked")
   protected final void controller(final C controller) {
     if (controller == null) {
-      return;
+      throw new NullPointerException();
+    }
+
+    if (this.controller != null) {
+      throw new IllegalStateException(
+        "A Controller has already been set on the View."
+      );
     }
 
     this.controller = controller;
-    this.controller.view(this);
 
-    // Set the model on the controller if the model eixsts.
+    try {
+      this.controller.view(this);
+    }
+    catch (IllegalStateException ex) {
+      ;
+    }
+
     if (this.model != null) {
-      this.controller.model(this.model);
+      try {
+        this.controller.model(this.model);
+      }
+      catch (IllegalStateException ex) {
+        ;
+      }
     }
   }
 
   /**
-   * Access the controller operating on the view.
+   * Render the {@link View} as a Swing component.
    *
-   * @return The controller operating on the view.
+   * <p>
+   * This method must be implemented by subclasses and is where the {@link View}
+   * is rendered as a Swing component.
+   *
+   * @return The rendered Swing component.
    */
-  protected final C controller() {
-    return this.controller;
+  abstract public JComponent render();
+
+  /**
+   * Emit an event with the specified name.
+   *
+   * @param event The name of the event to emit.
+   * @return      A boolean indicating whether or not the event was picked up
+   *              by a {@link Consumer}.
+   */
+  protected final boolean emit(final String event) {
+    return this.application.radio().emit(event);
   }
 
   /**
-   * Initialize the view.
+   * Emit an event with the specified name and data.
    *
-   * <p>
-   * This method must be overriden if a controller and model is set on the view.
-   * This ensures that initialization of controllers/models and rendering the
-   * view happens in the correct order.
-   *
-   * <p>
-   * The order in which the controller and model are initialized does not make a
-   * difference.
-   */
-  protected void initialize() {
-    ; // Do nothing by default.
-  }
-
-  /**
-   * Render the view.
-   *
-   * <p>
-   * This method must be implemented by subclasses and is where the view is
-   * actually rendered. Subclasses have access to both the controller and model
-   * of the view when this step is reached.
-   */
-  protected abstract void render();
-
-  /**
-   * React to changes in the observed models of the view.
-   *
-   * <p>
-   * This method simply casts the observable to a {@link Model }of the generic
-   * type as specified by the {@link View} after which the call is proxied to
-   * {@link #update(Model, Object)}.
-   *
-   * <p>
-   * This method should never be called directly and is only used by observable
-   * {@link Model Models}. Use {@link #update(Model, Object)} instead.
-   *
-   * @param observable  The observable that changed.
-   * @param object      The object that changed.
+   * @param <T>       The type of data to utilize in {@link Consumer Consumers}.
+   * @param event     The name of the event to emit.
+   * @param data      The data to pass on to {@link Consumer Consumers}.
+   * @return          A boolean indicating whether or not the event was picked
+   *                  up by a {@link Consumer}.
    */
   @SuppressWarnings("unchecked")
-  public final void update(final Observable observable, final Object object) {
-    this.update((M) observable, object);
+  protected final <T extends Object> boolean emit(
+    final String event,
+    final T data
+  ) {
+    return this.application.radio().emit(event, data);
   }
 
   /**
-   * React to changes in the observed models of the view.
+   * Attach a {@link Consumer} to the specified event.
    *
-   * <p>
-   * This method must be overriden by subclasses if they wish to be observers.
-   * Views that do not observe models do not have to override the method.
-   *
-   * @param model The model that changed.
-   * @param value The value that changed.
+   * @param <T>       The type of data to utilize in {@link Consumer Consumers}.
+   * @param event     The name of the event to attach the {@link Consumer} to.
+   * @param consumer  The {@link Consumer} to attach to the specified event.
+   * @return          A boolean indicating whether or not the operation affected
+   *                  the set of {@link Consumer Consumers} attached to the
+   *                  specified event.
    */
-  protected void update(final M model, final Object value) {
-    throw new UnsupportedOperationException();
+  @SuppressWarnings("unchecked")
+  protected final <T extends Object> boolean on(
+    final String event,
+    final Consumer<T> consumer
+  ) {
+    return this.application.radio().on(event, consumer);
+  }
+
+  /**
+   * Detach a {@link Consumer} from the specified event.
+   *
+   * @param <T>       The type of data to utilize in {@link Consumer Consumers}.
+   * @param event     The name of the event to detach the {@link Consumer} from.
+   * @param consumer  The {@link Consumer} to detach from the specified event.
+   * @return          A boolean indicating whether or not the operation affected
+   *                  the set of {@link Consumer Consumers} attached to the
+   *                  specified event.
+   */
+  @SuppressWarnings("unchecked")
+  protected final <T extends Object> boolean off(
+    final String event,
+    final Consumer<T> consumer
+  ) {
+    return this.application.radio().off(event, consumer);
   }
 }
