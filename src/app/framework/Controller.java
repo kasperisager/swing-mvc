@@ -85,7 +85,7 @@ public abstract class Controller<M extends Model, V extends View> {
    * @param model The {@link Model} that the {@link Controller} operates on.
    */
   @SuppressWarnings("unchecked")
-  protected final void model(final M model) {
+  final void model(final M model) {
     if (model == null) {
       throw new NullPointerException();
     }
@@ -123,7 +123,7 @@ public abstract class Controller<M extends Model, V extends View> {
    * @param view  The {@link View} that the {@link Controller} operates on.
    */
   @SuppressWarnings("unchecked")
-  protected final void view(final V view) {
+  final void view(final V view) {
     if (view == null) {
       throw new NullPointerException();
     }
@@ -174,10 +174,7 @@ public abstract class Controller<M extends Model, V extends View> {
    *                  up by a {@link Consumer}.
    */
   @SuppressWarnings("unchecked")
-  protected final <T extends Object> boolean emit(
-    final String event,
-    final T data
-  ) {
+  final <T extends Object> boolean emit(final String event, final T data) {
     return this.application.radio().emit(event, data);
   }
 
