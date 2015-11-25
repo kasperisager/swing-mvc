@@ -174,7 +174,7 @@ public abstract class Controller<M extends Model, V extends View> {
    *                  up by a {@link Consumer}.
    */
   @SuppressWarnings("unchecked")
-  final <T extends Object> boolean emit(final String event, final T data) {
+  protected final <T extends Object> boolean emit(final String event, final T data) {
     return this.application.radio().emit(event, data);
   }
 

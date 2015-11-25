@@ -33,7 +33,7 @@ doc: compile
 		-nonavbar
 
 doc.deploy: doc
-	cd doc && \
+	@cd doc && \
 	git init . && \
 	git add . && \
 	git commit -m "Update documentation."; \
